@@ -1,25 +1,12 @@
 import Link from 'next/link';
+import Menu from './components/menu';
 
 export default function Home() {
   return (
     <div>
       <h1>Task APP</h1>
 
-      <nav>
-        <ul>
-          <li>
-            <Link href="/about">
-              About
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/login">
-              Login
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <Menu></Menu>
     </div>
   );
 }

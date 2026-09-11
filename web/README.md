@@ -13,9 +13,11 @@ Open at [http://localhost:3000](http://localhost:3000).
 ## Pages
 
 ```
-/       ← Home
-/about  ← SSG
-/login  ← TODO
+/               ← Home
+/about          ← SSG
+/(auth)/signup  ← Dynamic (close to SSR)
+/(auth)/login   ← Dynamic (close to SSR)
+/(auth)/logout  ← Dynamic (close to SSR)
 ```
 
 ## Status
