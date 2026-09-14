@@ -1,3 +1,5 @@
 type User = { id: string; email: string; password: string };
 
-export const users: User[] = [];
+const g = globalThis as unknown as { __users?: User[] };
+
+export const users: User[] = g.__users ?? (g.__users = []);

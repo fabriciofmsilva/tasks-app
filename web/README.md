@@ -18,6 +18,7 @@ Open at [http://localhost:3000](http://localhost:3000).
 /(auth)/signup  ← Dynamic (close to SSR)
 /(auth)/login   ← Dynamic (close to SSR)
 /(auth)/logout  ← Dynamic (close to SSR)
+/tasks          ← Dynamic (close to SSR)
 ```
 
 ## Status
