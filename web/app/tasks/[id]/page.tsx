@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
-import { users } from "@/app/api/_store";
 import { readTasks } from "@/app/lib/tasks";
+import { getCurrentUser } from "@/app/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +9,7 @@ export default async function TaskDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const sessionId = (await cookies()).get("session")?.value;
-  const user = users.find((u) => u.id === sessionId);
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   const { id } = await params;

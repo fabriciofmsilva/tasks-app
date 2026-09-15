@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { users } from "@/app/api/_store";
-import { readTasks, writeTasks } from "@/app/lib/tasks";
+import { readTasks, updateTasks } from "@/app/lib/tasks";
+import { getCurrentUser } from "@/app/lib/auth";
+import { parseJson } from "@/app/lib/json";
 
-export async function GET(req: NextRequest) {
-  const sessionId = req.cookies.get("session")?.value;
-  const user = users.find((u) => u.id === sessionId);
-
+export async function GET() {
+  const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -15,14 +14,19 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const sessionId = req.cookies.get("session")?.value;
-  const user = users.find((u) => u.id === sessionId);
+  const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const { title } = await req.json();
-  const tasks = readTasks(user.id);
+  const body = await parseJson<{ title: string }>(req);
+  if (body instanceof NextResponse) return body;
+  const { title } = body;
+
+  if (typeof title !== "string" || !title.trim()) {
+    return NextResponse.json({ error: "title is required" }, { status: 400 });
+  }
+
   const newTask = { id: crypto.randomUUID(), title, done: false };
-  writeTasks(user.id, [...tasks, newTask]);
+  await updateTasks(user.id, (tasks) => ({ tasks: [...tasks, newTask], result: newTask }));
 
   return NextResponse.json(newTask, { status: 201 });
 }

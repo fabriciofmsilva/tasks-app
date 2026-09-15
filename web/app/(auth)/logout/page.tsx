@@ -1,23 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Logout() {
-  const logout = async () => {
+  const router = useRouter();
+
+  useEffect(() => {
     fetch("/api/logout", { method: "POST", body: JSON.stringify({}) })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
           alert(data.error);
         } else {
-          window.location.href = "/";
+          router.push("/");
         }
       });
-  };
-
-  useEffect(() => {
-    logout();
-  }, []);
+  }, [router]);
 
   return (
     <div>

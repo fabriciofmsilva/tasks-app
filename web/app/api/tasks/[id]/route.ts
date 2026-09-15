@@ -1,24 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { users } from "@/app/api/_store";
-import { readTasks, writeTasks } from "@/app/lib/tasks";
+import { updateTasks } from "@/app/lib/tasks";
+import { getCurrentUser } from "@/app/lib/auth";
+import { parseJson } from "@/app/lib/json";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const sessionId = req.cookies.get("session")?.value;
-  const user = users.find((u) => u.id === sessionId);
+  const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  const { done } = await req.json();
+  const body = await parseJson<{ done: boolean }>(req);
+  if (body instanceof NextResponse) return body;
+  const { done } = body;
 
-  const tasks = readTasks(user.id);
-  const task = tasks.find((t) => t.id === id);
-  if (!task) return NextResponse.json({ error: "not found" }, { status: 404 });
+  const updated = await updateTasks(user.id, (tasks) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return { tasks, result: null };
+    const updatedTask = { ...task, done };
+    return { tasks: tasks.map((t) => (t.id === id ? updatedTask : t)), result: updatedTask };
+  });
 
-  task.done = done;
-  writeTasks(user.id, tasks);
-
-  return NextResponse.json(task);
+  if (!updated) return NextResponse.json({ error: "not found" }, { status: 404 });
+  return NextResponse.json(updated);
 }

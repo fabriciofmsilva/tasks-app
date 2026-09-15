@@ -1,8 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Menu from '../../components/menu';
 
 export default function Signup() {
+  const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -17,7 +20,7 @@ export default function Signup() {
         if (data.error) {
           alert(data.error);
         } else {
-          window.location.href = "/tasks";
+          router.push("/tasks");
         }
       });
   };
