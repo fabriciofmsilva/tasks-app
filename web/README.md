@@ -30,6 +30,10 @@ SSG is served as pure HTML, which can be cached/CDN'd, saving on server-side pro
 
 SSR processes every request on the server side to generate a custom page per user. If we served a dynamic page as if it were static, we could end up mixing content between users.
 
+## What I still don't understand about rendering
+
+Building this app helped me understand the difference between SSG and SSR in Next.js. I still haven't learned ISR, streaming, Server Actions, or revalidation — that's a knowledge gap, and these concepts still need to be applied in the project.
+
 ## Status
 
 Work in progress: public landing page, fake login/signup, and a task dashboard.
