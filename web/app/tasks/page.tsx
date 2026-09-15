@@ -1,13 +1,14 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { users } from "../api/_store";
-import { readTasks } from "../lib/tasks";
+import { users } from "@/app/api/_store";
+import { readTasks } from "@/app/lib/tasks";
 
 export const dynamic = "force-dynamic";
 
-import Menu from '../components/menu';
+import Menu from '@/app/components/menu';
+import TaskList from "./TaskList";
 
-export default async function Tasks() {
+export default async function TasksPage() {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
   const user = users.find((u) => u.id === sessionId);
@@ -20,11 +21,7 @@ export default async function Tasks() {
     <div>
       <h1>Tasks - Task APP</h1>
       <Menu></Menu>
-      <ul>
-        {tasks.map((t) => (
-          <li key={t.id}>{t.done ? "✅" : "⬜"} {t.title}</li>
-        ))}
-      </ul>
+      <TaskList tasks={tasks} />
     </div>
   );
 }
